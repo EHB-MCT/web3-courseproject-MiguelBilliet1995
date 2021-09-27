@@ -1,6 +1,7 @@
-# Find an example app or product that you would make with it
+# Task 2: Brainstorm technology
+## Find an example app or product that you would make with it
 
-# Gauge its popularity
+## Gauge its popularity
 * **stackoverflow**
 583,502 results
 
@@ -12,10 +13,10 @@
 * **parent company**
 Facebook
 
-# Link to an official site
+## Link to an official site
 [official site](https://reactjs.org/)
 
-# Link to a decent starter course/tutorial (youtube/pluralsight/linkdin/udemy)
+## Link to a decent starter course/tutorial (youtube/pluralsight/linkdin/udemy)
 * **Youtube**
 [Link](https://www.youtube.com/watch?v=Ke90Tje7VS0&ab_channel=ProgrammingwithMosh)
 
