@@ -1,0 +1,16 @@
+.App{
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  width: 80%;
+  margin: 20px auto 0px;
+}
+
+.flex-item{
+  flex-grow: 1;
+}
