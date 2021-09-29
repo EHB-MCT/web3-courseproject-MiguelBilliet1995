@@ -4,7 +4,6 @@
   align-items: center;
   gap: 10px;
 
-  width: 80%;
   margin: 0px 0px 35px;
 }
 
@@ -31,7 +30,7 @@
 }
 
 .productDetail {
-  width: 220px;
+  width: 250px;
 }
 
 .productDetail > * {
@@ -53,4 +52,17 @@
 
 .productItem > .productAction {
   text-align: right;
+}
+
+.productAction > button {
+  padding: 7px 10px;
+  border: 0px;
+  background-color: #00b894;
+  font-size: 1em;
+  color: white;
+  border-radius: 5px;
+}
+
+button:hover{
+  cursor: pointer;
 }

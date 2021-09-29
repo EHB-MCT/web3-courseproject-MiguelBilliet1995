@@ -1,17 +1,12 @@
 import React from "react";
-import './ProductList.css'
+import './ProductList.css';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 class ProductListItem extends React.Component {
 
   constructor(props){
     super(props);
-
-    this.handleAddToCart = this.addToCart.bind(this);
-  }
-
-  addToCart() {
-    console.log(this.props.productId);
   }
 
   render(){
@@ -26,7 +21,7 @@ class ProductListItem extends React.Component {
         <span className="productPrice">€ {this.props.item.price.toFixed(2)}</span>
       </div>
       <div className="productAction">
-        <button onClick={this.handleAddToCart}>Koop</button>
+        <button onClick={() => this.props.addToCart(this.props.item)}><FontAwesomeIcon icon="shopping-cart" /></button>
       </div>
     </div>);
   }
@@ -37,15 +32,32 @@ class ProductList extends React.Component {
 
   constructor(props){
     super(props);
-
-    this.list = this.props.products.map((item, index) => {
-      return <ProductListItem item={item} productId={index} key={index} />
-    });
   }
 
   render(){
+
+    this.list = this.props.products.map((item, index) => {
+      // filter
+      if(this.props.filter.length > 0){
+        return this.props.filter.map((filter) => {
+          switch(filter.type){
+            case "brand":
+              console.log("brand filter");
+              if(item.brand == filter.value){
+                console.log("match!")
+                return <ProductListItem item={item} productId={index} key={index} addToCart={this.props.addToCart} />
+              }
+              break;
+          }
+        });
+      }else{
+        return <ProductListItem item={item} productId={index} key={index} addToCart={this.props.addToCart} />
+      }
+    });
+
     return (
       <div>
+        <h3>{this.list.length} producten</h3>
         {this.list}
       </div>
     );
