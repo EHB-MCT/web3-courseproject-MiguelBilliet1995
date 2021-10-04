@@ -98,7 +98,7 @@ class App extends React.Component {
   ajustFilterCheckbox(type, value, checked){
     console.log(type, value, checked);
     let newFilter = this.state.filter;
-    if(this.state.filter.filter(e => e.value == value).length > 0){
+    if(this.state.filter.filter(key => key.value == value).length > 0){
       console.log("bestaat");
       // filter verwijderen
       const index = newFilter.findIndex(key => key.value === value);
