@@ -1,0 +1,161 @@
+# For more information: https://laravel.com/docs/sail
+version: '3'
+services:
+    laravel.test:
+        build:
+            context: ./vendor/laravel/sail/runtimes/8.0
+            dockerfile: Dockerfile
+            args:
+                WWWGROUP: '${WWWGROUP}'
+        image: sail-8.0/app
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        ports:
+            - '${APP_PORT:-80}:80'
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+        volumes:
+            - '.:/var/www/html'
+        networks:
+            - sail
+        depends_on:
+            - mysql
+            - redis
+            - meilisearch
+            - selenium
+    redis:
+        image: 'redis:alpine'
+        ports:
+            - '${FORWARD_REDIS_PORT:-6379}:6379'
+        volumes:
+            - 'sailredis:/data'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            retries: 3
+            timeout: 5s
+    meilisearch:
+        image: 'getmeili/meilisearch:latest'
+        ports:
+            - '${FORWARD_MEILISEARCH_PORT:-7700}:7700'
+        volumes:
+            - 'sailmeilisearch:/data.ms'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD", "wget", "--no-verbose", "--spider",  "http://localhost:7700/health"]
+            retries: 3
+            timeout: 5s
+    mailhog:
+        image: 'mailhog/mailhog:latest'
+        ports:
+            - '${FORWARD_MAILHOG_PORT:-1025}:1025'
+            - '${FORWARD_MAILHOG_DASHBOARD_PORT:-8025}:8025'
+        networks:
+            - sail
+    selenium:
+        image: 'selenium/standalone-chrome'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        networks:
+            - sail
+
+    #DBS
+
+    mysql:
+        image: 'mysql:8.0'
+        ports:
+            - '${FORWARD_DB_PORT:-3306}:3306'
+        environment:
+            MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_DATABASE: '${DB_DATABASE}'
+            MYSQL_USER: '${DB_USERNAME}'
+            MYSQL_PASSWORD: '${DB_PASSWORD}'
+            MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+        volumes:
+            - './databasedata/db0:/var/lib/mysql'
+        networks:
+            - sail
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-p${DB_PASSWORD}"]
+            retries: 3
+            timeout: 5s
+
+    pgsql:
+        image: postgres
+        restart: always
+        ports:
+            - '5432:5432'
+        environment:
+            POSTGRES_PASSWORD: '${PGDB_PASSWORD}'
+            POSTGRES_USER: '${PGDB_USERNAME}'
+            POSTGRES_DB: '${PGDB_DATABASE}'
+        volumes:
+            - './databasedata/db1:/var/lib/postgresql/data'
+        networks:
+            - sail
+
+    influxdb:
+        image: influxdb:2.0.7
+        volumes:
+            - './databasedata/db2:/var/lib/influxdb2'
+        ports:
+            - '8086:8086'
+
+
+    #influx
+
+    influxdb_cli:
+        links:
+            - influxdb
+        image: influxdb:2.0.7
+        volumes:
+            - './databasedata/db2:/var/lib/influxdb2'
+            - ./ssl/influxdb-selfsigned.crt:/etc/ssl/influxdb-selfsigned.crt
+            - ./ssl/influxdb-selfsigned.key:/etc/ssl/influxdb-selfsigned.key
+        environment: 
+            # Use these same configurations parameters in your telegraf configuration, mytelegraf.conf.
+            - DOCKER_INFLUXDB_INIT_MODE=setup
+            - DOCKER_INFLUXDB_INIT_USERNAME=myusername
+            - DOCKER_INFLUXDB_INIT_PASSWORD=passwordpasswordpassword
+            - DOCKER_INFLUXDB_INIT_ORG=myorg
+            - DOCKER_INFLUXDB_INIT_BUCKET=mybucket
+            - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=mytoken
+            - INFLUXD_TLS_CERT=/etc/ssl/influxdb-selfsigned.crt
+            - INFLUXD_TLS_KEY=/etc/ssl/influxdb-selfsigned.key
+        entrypoint: ["./entrypoint.sh"]
+        restart: on-failure:10
+        depends_on:
+            - influxdb
+
+    telegraf:
+        image: telegraf
+        links:
+            - influxdb
+        volumes:
+        # Mount for telegraf config
+            - ./telegraf/mytelegraf.conf:/var/lib/influxdb
+        #env_file:
+            #- ./influxv2.env
+        environment: 
+            - DOCKER_INFLUXDB_INIT_ORG=EHB
+            - DOCKER_INFLUXDB_INIT_BUCKET=EHB
+            - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=AYPepioUAQubbk9aTZp2Kqmx23G2vTIupKPkG_Wh1CDnf3A659ZFE6Hs4L9X5jx8lvbSrMe6tauPY6GDpWCWXw==
+        depends_on:
+            - influxdb_cli
+
+
+networks:
+    sail:
+        driver: bridge
+volumes:
+    sailmysql:
+        driver: local
+    sailredis:
+        driver: local
+    sailmeilisearch:
+        driver: local
