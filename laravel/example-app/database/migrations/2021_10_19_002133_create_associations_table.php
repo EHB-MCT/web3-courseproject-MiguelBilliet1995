@@ -22,7 +22,7 @@ class CreateAssociationsTable extends Migration
             $table->string('email')->unique(); // email kring
             $table->string('telephone'); // telefoon kring
             $table->boolean('active'); // 0: inactief / 1: actief
-            $table->integer('bill_number'); // factuurnummer
+            $table->string('bill_number'); // factuurnummer
 
             $table->timestamps();
         });

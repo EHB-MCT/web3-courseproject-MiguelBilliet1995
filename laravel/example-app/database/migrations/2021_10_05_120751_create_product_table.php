@@ -17,11 +17,11 @@ class CreateProductTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // product naam
-            $table->double('price', 4, 2); // product prijs
-            $table->string('category'); // product categorie (verbruiksgoeder / vat / andere)
+            $table->double('price', 5, 2); // product prijs
+            $table->enum('category', ['consumables', 'keg', 'other']); // product categorie (verbruiksgoeder / vat / andere)
             $table->integer('total_present'); // aantal aanwezig (bij vat vol) 
-            $table->integer('total_empty'); // bij vat: aantal leeg anders null
-            $table->integer('total_warning'); // waarschuwing bij aantal of minder
+            $table->integer('total_empty')->nullable(); // bij vat: aantal leeg anders null
+            $table->integer('total_warning')->nullable(); // waarschuwing bij aantal of minder
             $table->timestamps();
         });
     }
