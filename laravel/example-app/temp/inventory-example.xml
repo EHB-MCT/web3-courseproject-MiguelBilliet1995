@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<inventaris>
+  <basisgegevens inventarispersoon="10" type="voorinventaris" kring="'t Vat" activiteit="heliumcantus (Annelies) " naam_inventarispersoon_kring="Annelies" soort="Cantus" datum="15-10-2021"/>
+  <vaten_vol>
+    <item id="29" aantal="9"/>
+  </vaten_vol>
+  <vaten_leeg>
+    <item id="29" aantal="0"/>
+  </vaten_leeg>
+  <verbruiksgoederen>
+    <item id="13" aantal="0"/>
+    <item id="14" aantal="0"/>
+    <item id="15" aantal="0"/>
+    <item id="16" aantal="0"/>
+    <item id="17" aantal="0"/>
+    <item id="18" aantal="0"/>
+    <item id="19" aantal="0"/>
+    <item id="20" aantal="0"/>
+    <item id="21" aantal="0"/>
+    <item id="22" aantal="0"/>
+    <item id="23" aantal="0"/>
+    <item id="24" aantal="0"/>
+    <item id="25" aantal="0"/>
+    <item id="26" aantal="0"/>
+    <item id="27" aantal="0"/>
+    <item id="31" aantal="1"/>
+  </verbruiksgoederen>
+  <andere/>
+  <boetes/>
+</inventaris>

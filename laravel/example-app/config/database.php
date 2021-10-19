@@ -78,6 +78,14 @@ return [
             'sslmode' => 'prefer',
         ],
 
+        // lukt niet om mongo dependencies te instaleren
+
+        // 'mongodb' => [
+        //     'driver' => 'mongodb',
+        //     'dsn' => env('DB_URI', 'mongodb://sail:password@localhost:27017/sail/myappdb?retryWrites=true&w=majority'),
+        //     'database' => 'myappdb',
+        // ]
+
         // 'sqlsrv' => [
         //     'driver' => 'sqlsrv',
         //     'url' => env('DATABASE_URL'),

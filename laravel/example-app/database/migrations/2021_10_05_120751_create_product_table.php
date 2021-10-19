@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Schema;
 class CreateProductTable extends Migration
 {
 
-    protected $connection = 'pgsql'; // andere database gebruiken -> PosgreSQL
-
     /**
      * Run the migrations.
      *
@@ -16,12 +14,14 @@ class CreateProductTable extends Migration
      */
     public function up()
     {
-        Schema::connection('pgsql')->create('products', function (Blueprint $table) {
+        Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('brand');
-            $table->double('price', 4, 2);
-            $table->longText('description');
+            $table->string('name'); // product naam
+            $table->double('price', 4, 2); // product prijs
+            $table->string('category'); // product categorie (verbruiksgoeder / vat / andere)
+            $table->integer('total_present'); // aantal aanwezig (bij vat vol) 
+            $table->integer('total_empty'); // bij vat: aantal leeg anders null
+            $table->integer('total_warning'); // waarschuwing bij aantal of minder
             $table->timestamps();
         });
     }
